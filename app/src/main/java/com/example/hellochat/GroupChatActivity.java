@@ -1,9 +1,12 @@
 package com.example.hellochat;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.icu.text.Edits;
+import java.util.Iterator;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -58,13 +62,66 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 SendMessageInfoToDatabase();
                 userMessageInput.setText("");
+                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+
             }
         });
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
 
 
+        GroupNameRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+              if(dataSnapshot.exists())
+              {
+                  DisplayMessages(dataSnapshot);
+              }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.exists())
+                {
+                    DisplayMessages(dataSnapshot);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void DisplayMessages(DataSnapshot dataSnapshot) {
+
+        Iterator iterator=dataSnapshot.getChildren().iterator();
+        while(iterator.hasNext())
+        {
+            String chatDate=(String)((DataSnapshot)iterator.next()).getValue();
+            String chatMessage=(String)((DataSnapshot)iterator.next()).getValue();
+            String chatName=(String)((DataSnapshot)iterator.next()).getValue();
+            String chatTime=(String)((DataSnapshot)iterator.next()).getValue();
+            displaytextMessages.append(chatName + ":\n"+chatMessage+"\n"+chatTime+"    "+chatDate+" \n\n\n");
+            mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+        }
+
+    }
 
     private void InitializeFields() {
         mToolbar=(Toolbar) findViewById(R.id.group_chat_bar_layout);
@@ -107,7 +164,7 @@ public class GroupChatActivity extends AppCompatActivity {
         else
         {
             Calendar calForDate  =Calendar.getInstance();
-            SimpleDateFormat currentDateFormat=new SimpleDateFormat("MMM dd,yyyy");
+            SimpleDateFormat currentDateFormat=new SimpleDateFormat("MMM dd yyyy");
             currentDate=currentDateFormat.format(calForDate.getTime());
             Calendar calForTime  =Calendar.getInstance();
             SimpleDateFormat currentTimeFormat=new SimpleDateFormat("hh:mm");
@@ -115,7 +172,18 @@ public class GroupChatActivity extends AppCompatActivity {
 
             HashMap<String,Object> groupMessageKey=new HashMap<>();
 
+
+
+
+
+
             GroupNameRef.updateChildren(groupMessageKey);
+
+
+
+
+
+
 
             GroupMessageKeyRef=GroupNameRef.child(messageKey);
 
