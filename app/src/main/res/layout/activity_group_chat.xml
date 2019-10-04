@@ -37,6 +37,7 @@
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2sp"
                 android:layout_marginBottom="50dp"
+                android:background="@color/colorAccent"
 
 
                 >
@@ -52,22 +53,25 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         >
+
         <EditText
             android:id="@+id/input_group_meaasage"
-            android:layout_width="350dp"
+            android:layout_width="317dp"
             android:layout_height="wrap_content"
             android:hint="Write your message here"
             android:padding="17dp"
 
-            >
-        </EditText>
+            ></EditText>
+
         <ImageButton
             android:id="@+id/send_message_button"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/send_message"
 
-            />
+            android:layout_alignTop="@+id/myLinearLayout"
+
+            android:layout_alignBottom="@+id/myLinearLayout"
+            android:src="@drawable/send_message" />
 
     </LinearLayout>
 

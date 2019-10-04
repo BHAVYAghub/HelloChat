@@ -11,5 +11,11 @@
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:listSelector="@color/colorgreyish"
+        android:padding="10dp"
+        android:dividerHeight="10sp"
+        android:background="@drawable/customshape"
+        android:divider="@android:color/transparent"
+        />
 </RelativeLayout>
