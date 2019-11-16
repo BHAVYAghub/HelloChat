@@ -38,6 +38,8 @@ public class ChatsFragment extends Fragment {
     private FirebaseAuth mAuth;
     private String currentUserID="";
 
+
+
     public ChatsFragment() {
         // Required empty public constructor
     }
@@ -97,7 +99,7 @@ public class ChatsFragment extends Fragment {
 
 
 
-                                        holder.userStatus.setText("offline");
+                                        holder.userStatus.setText("Last Seen"+"\n"+"date"+"time");
 
 
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +109,7 @@ public class ChatsFragment extends Fragment {
                                             Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                                             chatIntent.putExtra("visit_user_id", usersIDs);
                                             chatIntent.putExtra("visit_user_name", retName);
-                                            chatIntent.putExtra("visit_image", retImage[0]);
+                                            chatIntent.putExtra("visit_image", retImage);
                                             startActivity(chatIntent);
                                         }
                                     });

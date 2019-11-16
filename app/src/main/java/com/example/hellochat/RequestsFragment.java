@@ -71,7 +71,7 @@ public class RequestsFragment extends Fragment {
     }
 
     @Override
-     public void onStart()
+    public void onStart()
     {
         super.onStart();
 
