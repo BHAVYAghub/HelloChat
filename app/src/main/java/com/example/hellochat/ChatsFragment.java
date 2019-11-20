@@ -72,7 +72,7 @@ public class ChatsFragment extends Fragment {
                 new FirebaseRecyclerOptions.Builder<Contacts>()
                         .setQuery(ChatsRef, Contacts.class)
                         .build();
-        FirebaseRecyclerAdapter<Contacts, ChatsViewHolder> adapter =
+                FirebaseRecyclerAdapter<Contacts, ChatsViewHolder> adapter =
                 new FirebaseRecyclerAdapter<Contacts, ChatsViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull final ChatsViewHolder holder, int position, @NonNull Contacts model)
@@ -109,7 +109,7 @@ public class ChatsFragment extends Fragment {
                                             Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                                             chatIntent.putExtra("visit_user_id", usersIDs);
                                             chatIntent.putExtra("visit_user_name", retName);
-                                            chatIntent.putExtra("visit_image", retImage);
+                                            chatIntent.putExtra("visit_image", retImage[0]);
                                             startActivity(chatIntent);
                                         }
                                     });
