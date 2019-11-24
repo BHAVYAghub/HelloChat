@@ -28,6 +28,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private ViewPager myViewPager;
@@ -45,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth=FirebaseAuth.getInstance();
-        currentUser=mAuth.getCurrentUser();
+
+
         RootRef= FirebaseDatabase.getInstance().getReference();
 
         mToolbar=(Toolbar)findViewById(R.id.main_page_toolbar);
@@ -69,13 +74,44 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        FirebaseUser currentUser=mAuth.getCurrentUser();
+
         if(currentUser==null)
         {
             SendUserToLoginActivity();
         }
         else
         {
+            updateUserStatus("online");
             VerifyUserExistence();
+        }
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        FirebaseUser currentUser=mAuth.getCurrentUser();
+
+
+        if (currentUser != null)
+        {
+            updateUserStatus("offline");
+        }
+    }
+
+
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        FirebaseUser currentUser=mAuth.getCurrentUser();
+
+
+        if (currentUser != null)
+        {
+            updateUserStatus("offline");
         }
     }
 
@@ -88,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if((dataSnapshot.child("name").exists()))
                 {
-                    Toast.makeText(MainActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(MainActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -126,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
          super.onOptionsItemSelected(item);
          if(item.getItemId()==R.id.main_logout_options )
-         {
+         {  updateUserStatus("offline");
              mAuth.signOut();
              SendUserToLoginActivity();
 
@@ -233,6 +269,28 @@ public class MainActivity extends AppCompatActivity {
         startActivity(findFriendsIntent);
 
 
+
+    }
+    private void updateUserStatus(String state)
+    {
+        String saveCurrentTime, saveCurrentDate;
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
+
+        HashMap<String, Object> onlineStateMap = new HashMap<>();
+        onlineStateMap.put("time", saveCurrentTime);
+        onlineStateMap.put("date", saveCurrentDate);
+        onlineStateMap.put("state", state);
+        curr=mAuth.getCurrentUser().getUid();
+
+        RootRef.child("Users").child(curr).child("userState")
+                .updateChildren(onlineStateMap);
 
     }
 }
