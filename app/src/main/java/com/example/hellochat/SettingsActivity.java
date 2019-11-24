@@ -65,18 +65,18 @@ public class SettingsActivity extends AppCompatActivity {
                 UpdateSettings();
             }
         });
-       RetrieveUserInfo();
-       userProfileImage.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Intent galleryIntent=new Intent();
-               galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-               galleryIntent.setType("image/*");
-               startActivityForResult(galleryIntent,galleryPick);
+        RetrieveUserInfo();
+        userProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent galleryIntent=new Intent();
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent,galleryPick);
 
 
-           }
-       });
+            }
+        });
     }
 
 
@@ -103,7 +103,7 @@ public class SettingsActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful())
                     {
-                          SendUserToMainActivity();
+                        SendUserToMainActivity();
                         Toast.makeText(SettingsActivity.this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
 
                     }
@@ -214,7 +214,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     final String downloadUrl=uri.toString();
-                                  //  Toast.makeText(SettingsActivity.this,downloadUrl , Toast.LENGTH_SHORT).show();
+                                    //  Toast.makeText(SettingsActivity.this,downloadUrl , Toast.LENGTH_SHORT).show();
                                     RootRef.child("Users").child(currentuserID).child("image")
                                             .setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override

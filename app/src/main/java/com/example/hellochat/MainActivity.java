@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this,R.style.AlertDialog);
         builder.setTitle("Enter group Name : ");
         final EditText groupNameField =new EditText(MainActivity.this);
-        groupNameField.setHint(" e.g Jaypee Vale");
+        groupNameField.setHint(" e.g z");
         builder.setView(groupNameField);
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override

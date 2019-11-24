@@ -99,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this,"Please enter password..",Toast.LENGTH_SHORT).show();
 
         }
-        else if(radio.equals("Admin")&&email.lastIndexOf("xyz")==-1||(email.lastIndexOf("xyz")<(email.lastIndexOf("@"))))
+        else if(radio.equals("Admin")&&(email.lastIndexOf("xyz")==-1||(email.lastIndexOf("xyz")<(email.lastIndexOf("@")))))
         {
             Toast.makeText(this, "You are not admin", Toast.LENGTH_SHORT).show();
 
