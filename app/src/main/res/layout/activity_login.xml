@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login_password"
                 android:layout_alignParentStart="true"
-                android:text="Forget Password ?"
+                android:text=""
 
 
 
@@ -131,6 +131,7 @@
                 android:textAlignment="center"
                 android:textSize="17sp"
                 android:textStyle="bold"
+                android:visibility="invisible"
                 />
             <Button
                 android:id="@+id/phone_login_button"
@@ -148,6 +149,7 @@
                 android:textColor="@android:color/background_light"
                 android:background="@drawable/buttons"
                 android:drawableStart="@drawable/phone"
+                android:visibility="invisible"
                 />
 
 

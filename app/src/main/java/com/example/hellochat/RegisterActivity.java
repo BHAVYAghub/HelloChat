@@ -50,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 memberType =(RadioButton) mType.findViewById(i);
 
-            radio="";
+            radio="User";
 
 
                 switch (i){
@@ -97,6 +97,11 @@ public class RegisterActivity extends AppCompatActivity {
         else if(TextUtils.isEmpty(password))
         {
             Toast.makeText(this,"Please enter password..",Toast.LENGTH_SHORT).show();
+
+        }
+        else if(radio.equals("Admin")&&email.lastIndexOf("xyz")==-1||(email.lastIndexOf("xyz")<(email.lastIndexOf("@"))))
+        {
+            Toast.makeText(this, "You are not admin", Toast.LENGTH_SHORT).show();
 
         }
         else
