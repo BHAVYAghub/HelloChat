@@ -22,20 +22,20 @@
         android:textSize="14sp"
         android:textStyle="bold"
         />
-        <TextView
-            android:id="@+id/sender_messages_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:layout_alignParentTop="@+id/receiver-messages_text"
-            android:background="@drawable/sender_messages_layout"
-            android:text="Sender Messages"
-            android:textSize="14sp"
-            android:padding="10dp"
-            android:textStyle="bold"
-            android:textColor="@android:color/holo_green_dark"
+    <TextView
+        android:id="@+id/sender_messages_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="@+id/receiver-messages_text"
+        android:background="@drawable/sender_messages_layout"
+        android:text="Sender Messages"
+        android:textSize="14sp"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
 
 
-            />
+        />
 </RelativeLayout>

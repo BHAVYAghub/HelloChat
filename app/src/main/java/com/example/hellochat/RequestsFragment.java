@@ -30,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -148,6 +150,58 @@ public class RequestsFragment extends Fragment {
                                                                         {
                                                                             if (task.isSuccessful())
                                                                             {
+                                                                                UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
+                                                                                    @Override
+                                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                        String pri=dataSnapshot.child("privilage").getValue().toString();
+                                                                                        if(pri.equals("Admin"))
+                                                                                        {
+                                                                                            UsersRef.child(list_user_id).addValueEventListener(new ValueEventListener() {
+                                                                                                @Override
+                                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                                    String acc=dataSnapshot.child("access").getValue().toString();
+                                                                                                    //Toast.makeText(RequestsFragment.this, "dd", Toast.LENGTH_SHORT).show();
+                                                                                                    if(acc.equals("No"))
+                                                                                                    {
+                                                                                                        HashMap<String ,Object> profileMap=new HashMap<>();
+                                                                                                        profileMap.put("access","Yes");
+
+                                                                                                        UsersRef.child(list_user_id).updateChildren(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                            @Override
+                                                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                                                if(task.isSuccessful())
+                                                                                                                {
+                                                                                                                   // SendUserToMainActivity();
+                                                                                                                   // Toast.makeText(this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
+
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    String message=task.getException().toString();
+                                                                                                                    //Toast.makeText(SettingsActivity.this, "Error : "+message, Toast.LENGTH_SHORT).show();
+                                                                                                                }
+                                                                                                            }
+                                                                                                        });
+
+                                                                                                    }
+
+                                                                                                }
+
+                                                                                                @Override
+                                                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                                                }
+                                                                                            });
+
+                                                                                        }
+
+                                                                                    }
+
+                                                                                    @Override
+                                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                                    }
+                                                                                });
                                                                                 ContactsRef.child(list_user_id).child(currentUserID).child("Contact")
                                                                                         .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                     @Override

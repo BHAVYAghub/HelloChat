@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
+    private String curr;
 
 
     @Override
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
         RootRef= FirebaseDatabase.getInstance().getReference();
+
         mToolbar=(Toolbar)findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("HelloChat");
@@ -131,7 +133,28 @@ public class MainActivity extends AppCompatActivity {
          }
         if(item.getItemId()==R.id.main_create_group_options )
         {
-            RequestNewGroup();
+            curr=mAuth.getCurrentUser().getUid();
+
+            RootRef.child("Users").child(curr).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String str=dataSnapshot.child("privilage").getValue().toString();
+                    if(str.equals("User"))
+                    {
+                        Toast.makeText(MainActivity.this, " You Are Not Authorized", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        RequestNewGroup();
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
 
 
         }

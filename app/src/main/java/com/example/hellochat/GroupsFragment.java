@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +37,8 @@ public class GroupsFragment extends Fragment {
     private ArrayAdapter<String> arrayAdapter;
     private ArrayList<String> list_of_groups=new ArrayList<>();
     private DatabaseReference RootRef;
+    private FirebaseAuth mAuth;
+    private String curr;
 
 
     public GroupsFragment() {
@@ -46,9 +50,11 @@ public class GroupsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        mAuth=FirebaseAuth.getInstance();
+
 
         groupFragmentView= inflater.inflate(R.layout.fragment_groups, container, false);
-        RootRef= FirebaseDatabase.getInstance().getReference().child("Groups");
+        RootRef= FirebaseDatabase.getInstance().getReference();
         InitializeFields();
         RetrieveAndDisplayGroups();
         list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -64,20 +70,44 @@ public class GroupsFragment extends Fragment {
     }
 
     private void RetrieveAndDisplayGroups() {
-        RootRef.addValueEventListener(new ValueEventListener() {
+
+        curr=mAuth.getCurrentUser().getUid();
+        RootRef.child("Users").child(curr).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Set<String> set=new HashSet<>();
-                Iterator itr=dataSnapshot.getChildren().iterator();
-                while(itr.hasNext())
+                String str=dataSnapshot.child("access").getValue().toString();
+                if(str.equals("Yes"))
                 {
-                    set.add(((DataSnapshot)itr.next()).getKey());
+                    RootRef.child("Groups").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Set<String> set=new HashSet<>();
+                            Iterator itr=dataSnapshot.getChildren().iterator();
+                            while(itr.hasNext())
+                            {
+                                set.add(((DataSnapshot)itr.next()).getKey());
+
+
+                            }
+                            list_of_groups.clear();
+                            list_of_groups.addAll(set);
+                            arrayAdapter.notifyDataSetChanged();
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
 
 
                 }
-                list_of_groups.clear();
-                list_of_groups.addAll(set);
-                arrayAdapter.notifyDataSetChanged();
+                else
+                {
+
+                }
 
             }
 
@@ -86,6 +116,11 @@ public class GroupsFragment extends Fragment {
 
             }
         });
+
+
+
+
+
     }
 
     private void InitializeFields() {

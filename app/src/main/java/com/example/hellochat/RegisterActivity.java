@@ -10,15 +10,20 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 public class RegisterActivity extends AppCompatActivity {
     private Button CreateAccountButton;
@@ -27,6 +32,9 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ProgressDialog loadingBar;
     private DatabaseReference RootRef;
+    private RadioGroup mType;
+    private RadioButton memberType;
+    private String radio,access;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +43,33 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         RootRef= FirebaseDatabase.getInstance().getReference();
         InitializeFields();
+        mType=(RadioGroup) findViewById(R.id.radiogroup);
+
+        mType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                memberType =(RadioButton) mType.findViewById(i);
+
+            radio="";
+
+
+                switch (i){
+
+                    case R.id.admin_radiobutton:
+                        radio = memberType.getText().toString();
+                        Toast.makeText(RegisterActivity.this, "admin" + radio, Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.user_radiobutton:
+                        radio = memberType.getText().toString();
+                        Toast.makeText(RegisterActivity.this, "user" + radio, Toast.LENGTH_SHORT).show();
+
+                    default:
+                        break;
+
+                }
+            }
+        });
+
         AlreadyHaveAnAccountLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,8 +110,42 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful())
                     {
-                        String currentUserID=mAuth.getCurrentUser().getUid();
+                        final String currentUserID=mAuth.getCurrentUser().getUid();
                         RootRef.child("Users").child(currentUserID).setValue("");
+
+
+                        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( RegisterActivity.this,  new OnSuccessListener<InstanceIdResult>() {
+                            @Override
+                            public void onSuccess(InstanceIdResult instanceIdResult) {
+                                final String deviceToken = instanceIdResult.getToken();
+                                //Log.e("Token",mToken);
+                                RootRef.child("Users").child(currentUserID).child("device_token")
+                                        .setValue(deviceToken);
+                                Toast.makeText(RegisterActivity.this, ""+radio, Toast.LENGTH_SHORT).show();
+                                RootRef.child("Users").child(currentUserID).child("privilage")
+                                        .setValue(radio);
+
+
+                                if(radio.equals("Admin"))
+                                {
+                                    access="Yes";
+                                }
+                                else
+                                {
+                                    access="No";
+                                }
+                                RootRef.child("Users").child(currentUserID).child("access")
+                                        .setValue(access);
+
+
+
+
+                            }
+                        });
+
+
+
+
                         SendUserToMainActivity();
                         Toast.makeText(RegisterActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
                         loadingBar.dismiss();

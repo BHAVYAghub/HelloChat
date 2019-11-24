@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GroupChatActivity">
+    tools:context=".GroupChatActivity"
+    android:background="@color/ChatActivitycolor">
     <include
         android:id="@+id/group_chat_bar_layout"
         layout="@layout/app_bar_layout"
@@ -56,10 +57,11 @@
 
         <EditText
             android:id="@+id/input_group_message"
-            android:layout_width="317dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:hint="Write your message here"
             android:padding="17dp"
+
 
             ></EditText>
 
@@ -71,7 +73,27 @@
             android:layout_alignTop="@+id/myLinearLayout"
 
             android:layout_alignBottom="@+id/myLinearLayout"
+
+            android:outlineAmbientShadowColor="@color/ChatActivitycolor"
+            android:outlineSpotShadowColor="@color/ChatActivitycolor"
             android:src="@drawable/send_message" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/myLinearLayout"
+            android:layout_alignEnd="@+id/myLinearLayout"
+            android:textOff="Off"
+            android:textOn="On"
+            android:gravity="center"
+            android:outlineAmbientShadowColor="@color/Switch"
+            android:shadowColor="@color/Switch"
+            android:background="@color/Switch"
+
+
+
+            />
 
     </LinearLayout>
 

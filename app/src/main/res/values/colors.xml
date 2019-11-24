@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#84b6cf</color>
     <color name="colorAccent">#E6E6E6</color>
     <color name="colorgreyish">#d3e3e7</color>
+    <color name="ChatActivitycolor">#E0EEEE</color>
+    <color name="CustomMsgColor">#4E78A0</color>
+    <color name="Switch">#8DB6CD</color>
 
 
 </resources>
