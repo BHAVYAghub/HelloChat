@@ -96,7 +96,103 @@ public class GroupChatActivity extends AppCompatActivity {
         InitializeFields();
 
         GetUserInfo();
-        
+        SendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final AlertDialog.Builder a_builder = new AlertDialog.Builder(GroupChatActivity.this);
+
+
+                //Alert box
+                if( switchCompat.isChecked() ) {
+                    Retrofit retrofit=new Retrofit.Builder().baseUrl("https://abuse-detection2.herokuapp.com")
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+                    Api service=retrofit.create(Api.class);
+                    TokenRequest tokenRequest=new TokenRequest();
+                     res="";
+                    String input=userMessageInput.getText().toString();
+                    if(input.equals(""))
+                    {
+                        res="empty text";
+                    }
+                    else
+                    {
+                        tokenRequest.setMSG(input);
+                        Call<TokenResponse> tokenResponseCall=service.getTokenAccess(tokenRequest);
+                        tokenResponseCall.enqueue(new Callback<TokenResponse>() {
+                            @Override
+                            public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
+                                int statusCode=response.code();
+                                TokenResponse tokenResponse=response.body();
+
+                                Toast.makeText(GroupChatActivity.this, ""+tokenResponse.getIsAbusive(), Toast.LENGTH_SHORT).show();
+                                boolean resp=tokenResponse.getIsAbusive();
+                                if(resp==true)
+                                {
+                                    res="The Message You Want To Send Contains Some Informal Language.\n Do You Still Want To Continue?";
+                                }
+                                else
+                                {
+                                    res="The Message is Good To Be send";
+                                }
+
+                                a_builder.setMessage(res)
+                                        .setCancelable(false)
+
+                                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                dialogInterface.dismiss();
+                                            }
+                                        })
+                                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                SendMessageInfoToDatabase();
+                                                userMessageInput.setText("");
+                                                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+
+
+                                            }
+                                        });
+
+                                AlertDialog alert = a_builder.create();
+                                alert.setTitle("Alert!!");
+                                alert.show();
+
+
+                            }
+
+
+
+
+                            @Override
+                            public void onFailure(Call<TokenResponse> call, Throwable t) {
+                                Toast.makeText(GroupChatActivity.this, ""+t.getMessage(), Toast.LENGTH_LONG).show();
+
+                            }
+                        });
+
+                    }
+
+
+
+
+
+
+
+                }
+                else
+                {
+                    SendMessageInfoToDatabase();
+                    userMessageInput.setText("");
+                    mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+
+                }
+
+            }
+        });
 
     }
 
