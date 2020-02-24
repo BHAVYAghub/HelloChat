@@ -125,6 +125,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 });
     }
+    //send Message 
 
 
     private void SendMessage()
